@@ -1,0 +1,16 @@
+## registra o modulo no sln
+
+dotnet sln add src/Modules/Auth/
+
+## rodar migração
+
+dotnet sln list   
+
+dotnet ef migrations add InitialIdentity \
+  --project         src/Modules/Auth/Auth.csproj \
+  --startup-project src/Cinema/Cinema.csproj     \
+  --output-dir      Migrations
+
+dotnet ef database update \
+  -p src/Modules/Auth/Auth.csproj \
+  -s src/Cinema/Cinema.csproj
