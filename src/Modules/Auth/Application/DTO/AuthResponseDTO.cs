@@ -12,4 +12,5 @@ namespace Auth.Application.DTO
         public string Email { get; set; } = string.Empty;
         
     }
+    
 }

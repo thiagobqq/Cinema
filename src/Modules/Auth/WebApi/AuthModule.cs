@@ -38,6 +38,10 @@ namespace Auth.WebApi
             {
                 o.User.RequireUniqueEmail = true;
                 o.Password.RequiredLength = 6;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireDigit = false;
             })
             .AddEntityFrameworkStores<AuthDbContext>()
             .AddDefaultTokenProviders();

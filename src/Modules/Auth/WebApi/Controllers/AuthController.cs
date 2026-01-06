@@ -66,8 +66,8 @@ namespace Auth.WebApi.Controllers
 
                 var response = await _authService.Register(_userManager, request);
                 
-                if (!response)
-                    throw new Exception("Failed to create user");
+                if (!response.Success)
+                    return BadRequest(response.Message);
 
                 return Ok(new
                 {

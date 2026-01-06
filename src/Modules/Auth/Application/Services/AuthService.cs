@@ -42,7 +42,7 @@ namespace Auth.Application.Services
             };
         }
 
-        public async Task<bool> Register(UserManager<AppUser> userManager, RegisterDto request)
+        public async Task<ErrorMessageResponseDTO> Register(UserManager<AppUser> userManager, RegisterDto request)
         {
             var user = await userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Email!.ToLower());
             if (user != null)
@@ -54,16 +54,26 @@ namespace Auth.Application.Services
                 UserName = request.Name!.ToLower()
             };
 
+
             var result = await userManager.CreateAsync(newUser, request.Password!);
-            if (!result.Succeeded)
+            if (!result.Succeeded)            
             {
-                var errorMessages = string.Join("; ", result.Errors.Select(e => $"{e.Code}: {e.Description}"));                
-                return false;
+                var errorMessages = string.Join("; ", result.Errors.Select(e => $"{e.Code}: {e.Description}"));  
+                
+                return new ErrorMessageResponseDTO
+                {
+                    Success = false,
+                    Message = $"User creation failed: {errorMessages}"
+                };
             }
 
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return new ErrorMessageResponseDTO
+            {
+                Success = true,
+                Message = "User created successfully"
+            };
         }
              
     }

@@ -9,14 +9,14 @@ namespace Auth.Application.DTO
      public class RegisterDto
     {
         [Required]
-        public string? Name { get; set; }
+        public string Name { get; set; } = default!;
 
         [Required]
         [EmailAddress]
-        public string? Email { get; set; }
+        public string Email { get; set; }  = default!;
 
         [Required]
-        public string? Password { get; set; }        
+        public string Password { get; set; }  = default!;   
 
     }
 
@@ -26,19 +26,19 @@ namespace Auth.Application.DTO
 
         [Required]
         [EmailAddress]
-        public string? Email { get; set; }
+        public string  Email { get; set; } = default!;
 
         [Required]
 
-        public string? Password { get; set; }
+        public string  Password { get; set; } = default!;
     }
 
     public class AuthResponseDTO
     {
-        public string? Token { get; set; }
-        public string? email { get; set; }
-        public string? username { get; set; }
-        public string? Id { get; set; }
+        public string  Token { get; set; } = default!;
+        public string  email { get; set; } = default!;
+        public string  username { get; set; } = default!;
+        public string  Id { get; set; } = default!;
 
         
     }
@@ -46,18 +46,18 @@ namespace Auth.Application.DTO
     {
     [Required]
     [EmailAddress]
-    public string Email { get; set; } = string.Empty;
+    public string Email { get; set; }  = default!;
     }
 
 
     public class changePasswordDTO
     {
         [Required]
-        public string? Token { get; set; }
+        public string  Token { get; set; }  = default!;
 
         [Required]
-        public string? Email { get; set; }
+        public string  Email { get; set; } = default!;
 
-        public string? Password { get; set; }
+        public string  Password { get; set; } = default!;
     }
 }
