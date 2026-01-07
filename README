@@ -6,11 +6,13 @@ dotnet sln add src/Modules/Auth/
 
 dotnet sln list   
 
-dotnet ef migrations add InitialIdentity \
-  --project         src/Modules/Auth/Auth.csproj \
-  --startup-project src/Cinema/Cinema.csproj     \
-  --output-dir      Migrations
+dotnet ef migrations add InitialMovie \
+  --project src/Modules/Movie/Movie.csproj \
+  --startup-project src/Cinema/Cinema.csproj \
+  --output-dir Migrations \
+  --context MovieDbContext
 
 dotnet ef database update \
-  -p src/Modules/Auth/Auth.csproj \
-  -s src/Cinema/Cinema.csproj
+  --project src/Modules/Movie/Movie.csproj \
+  --startup-project src/Cinema/Cinema.csproj \
+  --context MovieDbContext

@@ -1,12 +1,14 @@
 using Auth.WebApi;
 using Auth.WebApi.Controllers;
 using Microsoft.OpenApi.Models;
+using Movie.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(UserController).Assembly); 
 builder.Services.AddAuthModule(builder.Configuration);
+builder.Services.AddMovieModule(builder.Configuration);
 
 
 builder.Services.AddEndpointsApiExplorer();
