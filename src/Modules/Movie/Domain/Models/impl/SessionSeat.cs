@@ -1,3 +1,4 @@
+// Movie.Domain/Models/impl/SessionSeat.cs
 using Movie.Domain.Enums;
 
 namespace Movie.Domain.Models.impl
@@ -7,14 +8,14 @@ namespace Movie.Domain.Models.impl
         public long SessionId { get; set; }
         public Session Session { get; set; } = null!;
 
-        public string RowLabel { get; set; } = string.Empty;
-        public int SeatNumber { get; set; }  
+        public long RoomSeatId { get; set; }
+        public RoomSeat RoomSeat { get; set; } = null!;
 
-        public SeatStatus Status { get; set; } = SeatStatus.Available;
+
+        public SeatStatus Status { get; set; }
         
-        public DateTime? ReservedUntil { get; set; }
+        public DateTime? ReservedUntil { get; set; }  
         
+        public string? TicketCode { get; set; }      
     }
-
-    
 }
