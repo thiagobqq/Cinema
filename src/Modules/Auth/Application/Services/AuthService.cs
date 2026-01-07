@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Application.Services
 {
-    public class AuthService : IAuthService
+    internal class AuthService : IAuthService
     {
         public readonly TokenService _tokenService;
         private readonly AuthDbContext _dbContext;

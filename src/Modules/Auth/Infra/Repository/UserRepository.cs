@@ -8,7 +8,7 @@ using Auth.Infra.Data;
 
 namespace Auth.Infra.Repository
 {
-    public class UserRepository : IUserRepository
+    internal class UserRepository : IUserRepository
     {
         private readonly AuthDbContext _context;
         public UserRepository(AuthDbContext context)

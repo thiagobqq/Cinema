@@ -14,7 +14,7 @@ namespace Auth.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    internal class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
         private readonly UserManager<AppUser> _userManager;

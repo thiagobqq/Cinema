@@ -6,7 +6,7 @@ using Auth.Application.DTO;
 
 namespace Auth.Domain.Interfaces.Repositories
 {
-    public interface IUserRepository
+    internal interface IUserRepository
     {
         Task<UserResponseDto?> GetUserById(string id);
         Task<IEnumerable<UserResponseDto>> GetAllUsers();

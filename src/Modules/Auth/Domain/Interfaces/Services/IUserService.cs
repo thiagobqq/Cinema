@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Auth.Domain.Interfaces.Services
 {
-    public interface IUserService
+    internal interface IUserService
     {
         Task<UserResponseDto?> GetUserById(string id);
         Task<IEnumerable<UserResponseDto>> GetAllUsers();

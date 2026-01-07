@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Auth.Application.DTO
 {
-    public class UserResponseDto
+    internal class UserResponseDto
     {
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;

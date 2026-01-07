@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Auth.Application.Services
 {
-    public class UserService : IUserService
+    internal class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Auth.Application.DTO
 {
-     public class RegisterDto
+    internal class RegisterDto
     {
         [Required]
         public string Name { get; set; } = default!;
@@ -21,7 +21,7 @@ namespace Auth.Application.DTO
     }
 
 
-    public class AuthDTO
+    internal class AuthDTO
     {
 
         [Required]
@@ -33,7 +33,7 @@ namespace Auth.Application.DTO
         public string  Password { get; set; } = default!;
     }
 
-    public class AuthResponseDTO
+    internal class AuthResponseDTO
     {
         public string  Token { get; set; } = default!;
         public string  email { get; set; } = default!;
@@ -42,7 +42,7 @@ namespace Auth.Application.DTO
 
         
     }
-    public class ForgotPasswordDTO
+    internal class ForgotPasswordDTO
     {
     [Required]
     [EmailAddress]
@@ -50,7 +50,7 @@ namespace Auth.Application.DTO
     }
 
 
-    public class changePasswordDTO
+    internal class changePasswordDTO
     {
         [Required]
         public string  Token { get; set; }  = default!;
