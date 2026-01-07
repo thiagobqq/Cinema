@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Auth.Application.DTO
 {
-    internal class UserUpdatePasswordDTO
+    public class UserUpdatePasswordDTO
     {
         public string OldPassword { get; set; } = string.Empty;
         public string NewPassword { get; set; } = string.Empty;

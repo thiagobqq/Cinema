@@ -13,10 +13,12 @@ namespace Auth.Application.Services
     internal class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly UserManager<AppUser> _userManager;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, UserManager<AppUser> userManager)
         {
             _userRepository = userRepository;
+            _userManager = userManager;
         }
 
         public async Task<UserResponseDto?> GetUserById(string targetId)
@@ -29,13 +31,13 @@ namespace Auth.Application.Services
             return await _userRepository.GetAllUsers();
         }
 
-        public async Task<bool> ChangePassword(string userId, UserManager<AppUser> userManager, UserUpdatePasswordDTO request)
+        public async Task<bool> ChangePassword(string userId,  UserUpdatePasswordDTO request)
         {
-            var user = await userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 throw new Exception("User not found");
 
-            var result = await userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);            
+            var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);            
             Console.WriteLine(result);
             
             if (result.Succeeded)

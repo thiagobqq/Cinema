@@ -14,43 +14,27 @@ namespace Auth.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    internal class AuthController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signinManager;
-        public AuthController(IAuthService authService, UserManager<AppUser> userManager, SignInManager<AppUser> signinManager)
+        
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _userManager = userManager;
-            _signinManager = signinManager;
         }
 
         [HttpPost("forgotPassword")]
         public async Task<IActionResult> forgotPassword([FromBody] ForgotPasswordDTO request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
-                return BadRequest();
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            
-            return Ok(new { token });
-            
+            var response = await _authService.ForgotPassword(request);            
+            return response.Success ? Ok(response.Message) : BadRequest(response.Message);            
         }
 
         [HttpPost("resetPassword")]
         public async Task<IActionResult> reset([FromBody] changePasswordDTO request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email!);
-            if (user == null)
-                return BadRequest();
-
-            var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Token!));
-
-            var a = await _userManager.ResetPasswordAsync(user, decodedToken, request.Password!);
-
-            return Ok(a);
+            var response = await _authService.ResetPassword(request);
+            return response.Success ? Ok(response.Message) : BadRequest(response.Message);
 
         }
         
@@ -64,15 +48,9 @@ namespace Auth.WebApi.Controllers
                 if (!ModelState.IsValid)
                     throw new Exception("Invalid payload");
 
-                var response = await _authService.Register(_userManager, request);
+                var response = await _authService.Register(request);
                 
-                if (!response.Success)
-                    return BadRequest(response.Message);
-
-                return Ok(new
-                {
-                    message = "Registro realizado com sucesso",
-                });
+                return response.Success ? Ok(response.Message) : BadRequest(response.Message);
             }
             catch (Exception ex)
             {
@@ -88,7 +66,7 @@ namespace Auth.WebApi.Controllers
                 if (!ModelState.IsValid)
                     throw new Exception("Invalid payload");
 
-                var response = await _authService.Login(_userManager, _signinManager, request);
+                var response = await _authService.Login(request);
                 if (response != null)
                 {
                     return Ok(response);

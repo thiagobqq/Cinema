@@ -16,14 +16,12 @@ namespace Auth.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    internal class UserController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly UserManager<AppUser> _userManager;
-        public UserController(IUserService userService, UserManager<AppUser> userManager)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _userManager = userManager;
         }
         
         [Authorize]
@@ -48,7 +46,7 @@ namespace Auth.WebApi.Controllers
         [HttpPost("me/changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] UserUpdatePasswordDTO request)
         {
-            var response = await _userService.ChangePassword(User.FindFirstValue(ClaimTypes.NameIdentifier)!, _userManager, request);
+            var response = await _userService.ChangePassword(User.FindFirstValue(ClaimTypes.NameIdentifier)!, request);
             if(response)
                 return Ok(new { message = "Password changed successfully" });
             return BadRequest(new { message = "Error changing password" });

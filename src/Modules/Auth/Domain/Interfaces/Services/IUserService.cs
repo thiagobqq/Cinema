@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Auth.Domain.Interfaces.Services
 {
-    internal interface IUserService
+    public interface IUserService
     {
         Task<UserResponseDto?> GetUserById(string id);
         Task<IEnumerable<UserResponseDto>> GetAllUsers();
 
 
-        Task<bool> ChangePassword(string userId, UserManager<AppUser> userManager, UserUpdatePasswordDTO request);
+        Task<bool> ChangePassword(string userId, UserUpdatePasswordDTO request);
          
     }
 }
