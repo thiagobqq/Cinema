@@ -15,6 +15,7 @@ namespace Auth.Domain.Interfaces.Services
 
 
         Task<bool> ChangePassword(string userId, UserUpdatePasswordDTO request);
+        Task<ErrorMessageResponseDTO> UpdateUserRole(UserUpdateRoleDTO request);
          
     }
 }

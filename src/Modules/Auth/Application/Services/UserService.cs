@@ -45,5 +45,21 @@ namespace Auth.Application.Services
             return false;
         }  
         
+        public async Task<ErrorMessageResponseDTO> UpdateUserRole(UserUpdateRoleDTO request)
+        {
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null)
+                throw new Exception("User not found");
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            if (!removeResult.Succeeded)
+                return new ErrorMessageResponseDTO { Success = false, Message = "Error removing user roles" };
+
+            var addResult = await _userManager.AddToRoleAsync(user, request.NewRole);
+            if (addResult.Succeeded)
+                return new ErrorMessageResponseDTO { Success = true, Message = "User role updated successfully" };
+            return new ErrorMessageResponseDTO { Success = false, Message = "Error adding user role" };
+        }
     }
 }

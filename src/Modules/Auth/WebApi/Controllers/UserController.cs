@@ -52,6 +52,15 @@ namespace Auth.WebApi.Controllers
             return BadRequest(new { message = "Error changing password" });
         }
 
-        
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("admin/updateUserRole")]
+        public async Task<IActionResult> UpdateUserRole([FromBody] UserUpdateRoleDTO request)
+        {
+            var response = await _userService.UpdateUserRole(request);
+            return response.Success ? Ok(new { response.Message }) : BadRequest(new { response.Message});
+            
+        }
+
     }
 }

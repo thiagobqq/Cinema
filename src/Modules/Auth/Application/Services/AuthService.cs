@@ -62,14 +62,21 @@ namespace Auth.Application.Services
             var result = await _userManager.CreateAsync(newUser, request.Password!);
             if (!result.Succeeded)            
             {
-                var errorMessages = string.Join("; ", result.Errors.Select(e => $"{e.Code}: {e.Description}"));  
                 
                 return new ErrorMessageResponseDTO
                 {
                     Success = false,
-                    Message = $"User creation failed: {errorMessages}"
+                    Message = $"User creation failed: {string.Join("; ", result.Errors.Select(e => $"{e.Code}: {e.Description}"))}"
                 };
             }
+
+            var roleResult = await _userManager.AddToRoleAsync(newUser!, "USER");
+            if (!roleResult.Succeeded)
+            {
+                var roleErrors = string.Join("; ", roleResult.Errors.Select(e => $"{e.Code}: {e.Description}"));
+                throw new Exception($"Falha ao adicionar tipo de usuário: {roleErrors}");
+            }
+
 
             await _dbContext.SaveChangesAsync();
 
@@ -130,6 +137,8 @@ namespace Auth.Application.Services
                 Message = "Password reset successfully"
             };
         }
+
+        
              
     }
 
