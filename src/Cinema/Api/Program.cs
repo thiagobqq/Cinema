@@ -1,3 +1,4 @@
+using Auth.Infra.Seeder;
 using Auth.WebApi;
 using Auth.WebApi.Controllers;
 using Microsoft.OpenApi.Models;
@@ -6,7 +7,7 @@ using Movie.WebApi;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
-    .AddApplicationPart(typeof(UserController).Assembly); 
+    .AddApplicationPart(typeof(AuthModule).Assembly);
 builder.Services.AddAuthModule(builder.Configuration);
 builder.Services.AddMovieModule(builder.Configuration);
 
@@ -44,6 +45,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+await RoleSeeder.SeedAsync(app.Services);
+await UserSeeder.SeedAsync(app.Services);
 
 
 if (app.Environment.IsDevelopment() || true)
