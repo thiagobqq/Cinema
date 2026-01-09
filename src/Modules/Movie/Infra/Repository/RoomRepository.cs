@@ -17,8 +17,6 @@ namespace Movie.Infra.Repository
         {
             return await _context.Rooms
                 .AsNoTracking()
-                .Include(r => r.Seats)
-                .Include(r => r.Sessions)
                 .ToListAsync();
         }
 
@@ -26,9 +24,8 @@ namespace Movie.Infra.Repository
         {
             return await _context.Rooms
                 .Include(r => r.Venue)
-                .Include(r => r.Seats)
                 .Include(r => r.Sessions)
-                    .ThenInclude(s => s.OccupiedSeats)
+                    .ThenInclude(s => s.SessionSeats)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == roomId);
         }

@@ -1,4 +1,5 @@
-// Movie.Domain/Models/impl/SessionSeat.cs
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Movie.Domain.Enums;
 
 namespace Movie.Domain.Models.impl
@@ -17,5 +18,9 @@ namespace Movie.Domain.Models.impl
         public DateTime? ReservedUntil { get; set; }  
         
         public string? TicketCode { get; set; }      
+
+        [ConcurrencyCheck] 
+        [Column(TypeName = "rowversion")] 
+        public byte[] RowVersion { get; set; } = null!;
     }
 }

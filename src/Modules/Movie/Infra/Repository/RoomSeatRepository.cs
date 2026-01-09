@@ -17,29 +17,14 @@ namespace Movie.Infra.Repository
         {
             return await _context.RoomSeats
                 .AsNoTracking()
-                .Include(rs => rs.Room)
-                .Include(rs => rs.SessionSeats)
-                    .ThenInclude(ss => ss.Session)
                 .ToListAsync();
         }
 
         public async Task<RoomSeat?> GetRoomSeatById(long roomSeatId)
         {
             return await _context.RoomSeats
-                .Include(rs => rs.Room)
-                .Include(rs => rs.SessionSeats)
-                    .ThenInclude(ss => ss.Session)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(rs => rs.Id == roomSeatId);
-        }
-
-        public async Task<IEnumerable<RoomSeat>> GetRoomSeatsByRoomId(long roomId)
-        {
-            return await _context.RoomSeats
-                .AsNoTracking()
-                .Where(rs => rs.RoomId == roomId)
-                .Include(rs => rs.SessionSeats)
-                .ToListAsync();
         }
 
         public async Task AddRoomSeat(RoomSeat roomSeat)

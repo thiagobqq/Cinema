@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Movie.Domain.Models.impl;
-using Movie.Domain.Enums;
+using Movie.Domain.Enums; 
 
 namespace Movie.Infra.Data
 {
@@ -12,7 +12,7 @@ namespace Movie.Infra.Data
 
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Room> Rooms { get; set; }
-        public DbSet<RoomSeat> RoomSeats { get; set; }
+        public DbSet<RoomSeat> RoomSeats { get; set; } 
         public DbSet<Film> Films { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<SessionSeat> SessionSeats { get; set; }
@@ -23,7 +23,7 @@ namespace Movie.Infra.Data
 
             ConfigureVenue(modelBuilder);
             ConfigureRoom(modelBuilder);
-            ConfigureRoomSeat(modelBuilder);
+            ConfigureRoomSeat(modelBuilder); 
             ConfigureFilm(modelBuilder);
             ConfigureSession(modelBuilder);
             ConfigureSessionSeat(modelBuilder);
@@ -47,14 +47,6 @@ namespace Movie.Infra.Data
                 entity.Property(r => r.Name)
                       .HasMaxLength(100)
                       .IsRequired();
-
-                entity.Ignore(r => r.Capacity);
-
-                entity.HasMany(r => r.Seats)
-                      .WithOne(s => s.Room)
-                      .HasForeignKey(s => s.RoomId)
-                      .OnDelete(DeleteBehavior.Cascade);
-
                 entity.HasMany(r => r.Sessions)
                       .WithOne(s => s.Room)
                       .HasForeignKey(s => s.RoomId)
@@ -66,16 +58,16 @@ namespace Movie.Infra.Data
         {
             modelBuilder.Entity<RoomSeat>(entity =>
             {
-                entity.HasIndex(rs => new { rs.RoomId, rs.RowLabel, rs.SeatNumber })
+                entity.HasIndex(rs => new { rs.RowLabel, rs.SeatNumber })
                       .IsUnique();
 
                 entity.Property(rs => rs.RowLabel)
-                      .HasMaxLength(5)
+                      .HasMaxLength(5) 
                       .IsRequired();
 
                 entity.Property(rs => rs.Type)
-                      .HasConversion<string>()
-                      .HasMaxLength(20);
+                      .HasConversion<string>() 
+                      .HasMaxLength(20); 
 
                 entity.Property(rs => rs.IsActive)
                       .HasDefaultValue(true);
@@ -110,10 +102,10 @@ namespace Movie.Infra.Data
 
                 entity.HasIndex(s => new { s.RoomId, s.StartsAt });
 
-                entity.HasMany(s => s.OccupiedSeats)
+                entity.HasMany(s => s.SessionSeats) 
                       .WithOne(ss => ss.Session)
                       .HasForeignKey(ss => ss.SessionId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.Cascade); 
             });
         }
 
@@ -125,19 +117,22 @@ namespace Movie.Infra.Data
                       .IsUnique();
 
                 entity.Property(ss => ss.Status)
-                      .HasConversion<string>()
-                      .HasMaxLength(20);
+                      .HasConversion<string>() 
+                      .HasMaxLength(20); 
 
                 entity.Property(ss => ss.TicketCode)
                       .HasMaxLength(50);
-
-                entity.Property<byte[]>("RowVersion")
-                      .IsRowVersion();
+                
+                entity.Property(ss => ss.RowVersion)
+                      .IsRowVersion()
+                      .IsRequired(); 
+                entity.Property(ss => ss.ReservedUntil)
+                      .IsRequired(false); 
 
                 entity.HasOne(ss => ss.RoomSeat)
                       .WithMany(rs => rs.SessionSeats)
                       .HasForeignKey(ss => ss.RoomSeatId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .OnDelete(DeleteBehavior.Restrict); 
             });
         }
     }

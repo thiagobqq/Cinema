@@ -5,9 +5,6 @@ namespace Movie.Domain.Models.impl
    
     internal class RoomSeat : Model
     {
-        public long RoomId { get; set; }
-        public Room Room { get; set; } = null!;
-
         public string RowLabel { get; set; } = string.Empty; 
         public int SeatNumber { get; set; }                    
 

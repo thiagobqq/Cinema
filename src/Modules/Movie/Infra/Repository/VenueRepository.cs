@@ -25,7 +25,7 @@ namespace Movie.Infra.Repository
         {
             return await _context.Venues
                 .Include(v => v.Rooms)
-                    .ThenInclude(r => r.Seats)
+                    .ThenInclude(r => r.Sessions)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(v => v.Id == venueId);
         }

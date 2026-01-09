@@ -20,7 +20,6 @@ namespace Movie.Infra.Repository
                 .Include(ss => ss.Session)
                     .ThenInclude(s => s.Film)
                 .Include(ss => ss.RoomSeat)
-                    .ThenInclude(rs => rs.Room)
                 .ToListAsync();
         }
 

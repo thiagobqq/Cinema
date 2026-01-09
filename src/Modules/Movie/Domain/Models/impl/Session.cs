@@ -15,7 +15,7 @@ namespace Movie.Domain.Models.impl
         public DateTime EndsAt { get; set; }
         public decimal Price { get; set; }
 
-        public ICollection<SessionSeat> OccupiedSeats { get; set; } = new List<SessionSeat>();
+        public ICollection<SessionSeat> SessionSeats { get; set; } = new List<SessionSeat>();
 
         
     }

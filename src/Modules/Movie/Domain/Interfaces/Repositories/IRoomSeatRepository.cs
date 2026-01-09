@@ -8,7 +8,6 @@ namespace Movie.Domain.Interfaces.Repositories
     {
         Task<IEnumerable<RoomSeat>> GetAllRoomSeats();
         Task<RoomSeat?> GetRoomSeatById(long roomSeatId);
-        Task<IEnumerable<RoomSeat>> GetRoomSeatsByRoomId(long roomId);
         Task AddRoomSeat(RoomSeat roomSeat);
         Task UpdateRoomSeat(RoomSeat roomSeat);
         Task DeleteRoomSeat(long roomSeatId);
