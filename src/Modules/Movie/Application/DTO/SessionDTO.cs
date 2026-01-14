@@ -8,10 +8,24 @@ namespace Movie.Application.DTO
     internal class SessionDTO
     {
         public long RoomId { get; set; }
-
         public long FilmId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public decimal Price { get; set; }
+    }
+
+    internal class SessionRequestDTO
+    {
+        public long Id { get; set; }
+    }
+
+    internal class SessionUpdateDTO : SessionDTO
+    {
+        public long Id { get; set; }
+    }
+
+    internal class SessionResponseDTO : SessionDTO
+    {
+        public long Id { get; set; }
     }
 }
