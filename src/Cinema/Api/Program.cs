@@ -7,6 +7,7 @@ using Movie.WebApi;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
+    .AddApplicationPart(typeof(MovieModule).Assembly)
     .AddApplicationPart(typeof(AuthModule).Assembly);
 builder.Services.AddAuthModule(builder.Configuration);
 builder.Services.AddMovieModule(builder.Configuration);
@@ -48,6 +49,7 @@ var app = builder.Build();
 
 await RoleSeeder.SeedAsync(app.Services);
 await UserSeeder.SeedAsync(app.Services);
+await MovieModule.SeedMovieDataAsync(app.Services);
 
 
 if (app.Environment.IsDevelopment() || true)

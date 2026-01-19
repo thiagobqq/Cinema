@@ -8,6 +8,7 @@ using Movie.Domain.Interfaces.Repositories;
 using Movie.Domain.Interfaces.Services;
 using Movie.Infra.Data;
 using Movie.Infra.Repository;
+using Movie.Infra.Seeder;
 
 
 namespace Movie.WebApi
@@ -39,6 +40,16 @@ namespace Movie.WebApi
             services.AddScoped<IVenueRepository, VenueRepository>();
 
             return services;
+        }
+
+        public static async Task SeedMovieDataAsync(IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var movieContext = scope.ServiceProvider.GetRequiredService<MovieDbContext>();
+                await movieContext.Database.MigrateAsync();
+                await MovieSeeder.SeedAsync(movieContext);
+            }
         }
         
     }
