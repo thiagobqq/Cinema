@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 
 namespace Movie.Application.DTO
 {
-    internal class RoomDTO
+    public class RoomDTO
     {
         public string Name { get; set; } = string.Empty;
         public long VenueId { get; set; }
         
     }
 
-    internal class RoomResponseDTO : RoomDTO
+    public class RoomResponseDTO : RoomDTO
     {
         public long Id { get; set; }
     }
 
-    internal class RoomUpdateDTO : RoomResponseDTO{}
+    public class RoomUpdateDTO : RoomResponseDTO{}
 }

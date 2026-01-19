@@ -4,7 +4,7 @@ using Movie.Application.DTO;
 
 namespace Movie.Domain.Interfaces.Services
 {
-    internal interface ISessionService
+    public interface ISessionService
     {
         Task<IEnumerable<SessionResponseDTO>> GetAllSessions();
         Task<SessionResponseDTO?> GetSessionById(long sessionId);

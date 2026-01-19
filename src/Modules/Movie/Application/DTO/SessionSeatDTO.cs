@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Movie.Application.DTO
 {
-    internal class SessionSeatDTO
+    public class SessionSeatDTO
     {
         public long SessionId { get; set; }
         public long RoomSeatId { get; set; }
@@ -14,10 +14,10 @@ namespace Movie.Application.DTO
         public string? TicketCode { get; set; }
     }
 
-    internal class SessionSeatRequestDTO : SessionSeatDTO
+    public class SessionSeatRequestDTO : SessionSeatDTO
     {
         public long Id { get; set; }
     }
 
-    internal class SessionSeatUpdateDTO : SessionSeatRequestDTO { }
+    public class SessionSeatUpdateDTO : SessionSeatRequestDTO { }
 }

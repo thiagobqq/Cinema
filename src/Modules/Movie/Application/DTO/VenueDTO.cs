@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Movie.Application.DTO
 {
-    internal class VenueDTO
+    public class VenueDTO
     {
         public string Name { get; set; } = string.Empty;
         public string Adress { get; set; } = string.Empty;
@@ -13,11 +13,11 @@ namespace Movie.Application.DTO
         
     }
 
-    internal class VenueResponseDTO : VenueDTO
+    public class VenueResponseDTO : VenueDTO
     {
         public long Id { get; set; }
     }
 
-    internal class VenueUpdateDTO : VenueResponseDTO{}
+    public class VenueUpdateDTO : VenueResponseDTO{}
     
 }

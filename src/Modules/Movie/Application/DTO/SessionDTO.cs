@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Movie.Application.DTO
 {
-    internal class SessionDTO
+    public class SessionDTO
     {
         public long RoomId { get; set; }
         public long FilmId { get; set; }
@@ -14,17 +14,17 @@ namespace Movie.Application.DTO
         public decimal Price { get; set; }
     }
 
-    internal class SessionRequestDTO
+    public class SessionRequestDTO
     {
         public long Id { get; set; }
     }
 
-    internal class SessionUpdateDTO : SessionDTO
+    public class SessionUpdateDTO : SessionDTO
     {
         public long Id { get; set; }
     }
 
-    internal class SessionResponseDTO : SessionDTO
+    public class SessionResponseDTO : SessionDTO
     {
         public long Id { get; set; }
     }

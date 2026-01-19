@@ -5,7 +5,7 @@ using Movie.Domain.Models.impl;
 
 namespace Movie.Domain.Interfaces.Services
 {
-    internal interface IRoomService
+    public interface IRoomService
     {
         Task<IEnumerable<RoomResponseDTO>> GetAllRooms();
         Task<RoomResponseDTO?> GetRoomById(long roomId);

@@ -5,7 +5,7 @@ using Movie.Domain.Models.impl;
 
 namespace Movie.Domain.Interfaces.Services
 {
-    internal interface IFilmService
+    public interface IFilmService
     {
         Task<IEnumerable<FilmResponseDTO>> GetAllFilms();
         Task<FilmResponseDTO?> GetFilmById(long filmId);

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Movie.Application.DTO
 {
-    internal class FilmDTO
+    public class FilmDTO
     {
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
@@ -15,15 +15,15 @@ namespace Movie.Application.DTO
         
     }
 
-    internal class FilmResponseDTO : FilmDTO
+    public class FilmResponseDTO : FilmDTO
     {
         public long Id { get; set; }
         public string Rating { get; set; } = string.Empty;
     }
 
-    internal class FilmUpdateDTO : FilmResponseDTO{}
+    public class FilmUpdateDTO : FilmResponseDTO{}
 
-    internal class FilmRatingUpdateDTO
+    public class FilmRatingUpdateDTO
     {
         public long FilmId { get; set; }
         public double NewRating { get; set; }
