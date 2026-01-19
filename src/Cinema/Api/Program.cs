@@ -1,17 +1,18 @@
 using Auth.Infra.Seeder;
 using Auth.WebApi;
-using Auth.WebApi.Controllers;
 using Microsoft.OpenApi.Models;
 using Movie.WebApi;
+using Tickets.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(MovieModule).Assembly)
-    .AddApplicationPart(typeof(AuthModule).Assembly);
+    .AddApplicationPart(typeof(AuthModule).Assembly)
+    .AddApplicationPart(typeof(TicketsModule).Assembly);
 builder.Services.AddAuthModule(builder.Configuration);
 builder.Services.AddMovieModule(builder.Configuration);
-
+builder.Services.AddTicketsModule(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

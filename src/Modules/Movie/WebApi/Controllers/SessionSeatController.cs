@@ -8,8 +8,7 @@ using Movie.Domain.Interfaces.Services;
 namespace Movie.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Route("api/[controller]")]    
     public class SessionSeatController : ControllerBase
     {
         private readonly ISessionSeatService _sessionSeatService;
@@ -27,6 +26,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpGet("{id:long}")]
+        [Authorize]
         public async Task<IActionResult> GetById(long id)
         {
             try
@@ -41,6 +41,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpGet("session/{sessionId:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetBySessionId(long sessionId)
         {
             var seats = await _sessionSeatService.GetSessionSeatsBySessionId(sessionId);
@@ -48,6 +49,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] SessionSeatDTO request)
         {
             await _sessionSeatService.AddSessionSeat(request);
@@ -55,6 +57,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(long id, [FromBody] SessionSeatUpdateDTO request)
         {
             request.Id = id;
@@ -70,6 +73,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(long id)
         {
             try

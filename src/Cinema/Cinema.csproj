@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Modules\Auth\Auth.csproj" />
     <ProjectReference Include="..\Modules\Movie\Movie.csproj" />
+    <ProjectReference Include="..\Modules\Tickets\Tickets.csproj" />
   </ItemGroup>
 
 </Project>
