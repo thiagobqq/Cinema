@@ -32,14 +32,5 @@ namespace Tickets.Infra.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeletePayment(long paymentId)
-        {
-            var payment = await _context.Payments.FindAsync(paymentId);
-            if (payment != null)
-            {
-                _context.Payments.Remove(payment);
-                await _context.SaveChangesAsync();
-            }
-        }
     }
 }

@@ -4,13 +4,14 @@ using Tickets.Application.DTO;
 
 namespace Tickets.Domain.Interfaces.Services
 {
-    internal interface IPaymentService
+    public interface IPaymentService
     {
         Task<IEnumerable<PaymentResponseDTO>> GetAllPayments();
         Task<PaymentResponseDTO?> GetPaymentById(long paymentId);
         Task<IEnumerable<PaymentResponseDTO>> GetPaymentsByTicketId(long ticketId);
         Task CreatePayment(PaymentDTO payment);
         Task UpdatePaymentStatus(long paymentId, PaymentStatusUpdateDTO statusUpdate);
-        Task DeletePayment(long paymentId);
+        Task<ProcessPaymentResponseDTO> ProcessPaymentAsync(ProcessPaymentDTO paymentDTO);
+        Task<ProcessPaymentResponseDTO> RefundPaymentAsync(long paymentId, string? reason = null);
     }
 }

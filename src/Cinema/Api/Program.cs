@@ -3,6 +3,7 @@ using Auth.WebApi;
 using MediatR;
 using Microsoft.OpenApi.Models;
 using Movie.WebApi;
+using PaymentGateway.WebApi;
 using Shared.Events;
 using Tickets.WebApi;
 
@@ -11,10 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(MovieModule).Assembly)
     .AddApplicationPart(typeof(AuthModule).Assembly)
-    .AddApplicationPart(typeof(TicketsModule).Assembly);
+    .AddApplicationPart(typeof(TicketsModule).Assembly)
+    .AddApplicationPart(typeof(PaymentGatewayModule).Assembly);
+
 builder.Services.AddAuthModule(builder.Configuration);
 builder.Services.AddMovieModule(builder.Configuration);
 builder.Services.AddTicketsModule(builder.Configuration);
+builder.Services.AddPaymentGatewayModule(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -61,6 +65,7 @@ EventDispatcher.Configure(app.Services.GetRequiredService<IMediator>());
 
 await RoleSeeder.SeedAsync(app.Services);
 await UserSeeder.SeedAsync(app.Services);
+await PaymentGatewayModule.SeedPaymentGatewayDataAsync(app.Services);
 
 
 if (app.Environment.IsDevelopment() || true)

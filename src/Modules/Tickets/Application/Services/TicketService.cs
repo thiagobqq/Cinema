@@ -24,7 +24,7 @@ namespace Tickets.Application.Services
             _sessionSeatService = sessionSeatService;
         }
 
-        public async Task<ErrorMessageResponseDTO> buyTicket(BuyTicketDTO buyTicketDTO, string userId)
+        public async Task<ErrorMessageResponseDTO> BuyTicket(BuyTicketDTO buyTicketDTO, string userId)
         {
             var available = await _sessionSeatService.IsSeatAvailable(buyTicketDTO.SessionSeatId);
             if (!available)
@@ -32,8 +32,7 @@ namespace Tickets.Application.Services
 
             var preBuyEvent = new PreBuyEvent{ SessionSeatId = buyTicketDTO.SessionSeatId, UserId = userId };
             await preBuyEvent.Call();
-
-            
+                        
             
 
             return new ErrorMessageResponseDTO { Success = true, Message = "Seat available" };

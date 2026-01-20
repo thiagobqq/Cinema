@@ -19,16 +19,15 @@ namespace Tickets.WebApi.Controllers
         public TicketController(ITicketService ticketService) => _ticketService = ticketService;
         
 
-        [HttpPost]
+        [HttpPost("buy")]
         [Authorize]
         public async Task<IActionResult> BuyTicket([FromBody] BuyTicketDTO buyTicketDTO)
         {
             var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if(userid == null)
                 return Unauthorized();
-            var result = await _ticketService.buyTicket(buyTicketDTO, userid);
-            return Ok(result);
-            
+            var result = await _ticketService.BuyTicket(buyTicketDTO, userid);
+            return result.Success ? Ok(result.Message) : BadRequest(result.Message);
         }
 
 

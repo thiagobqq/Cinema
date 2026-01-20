@@ -6,7 +6,7 @@ namespace Tickets.Domain.Interfaces.Services
 {
     public interface ITicketService
     {
-        Task<ErrorMessageResponseDTO> buyTicket(BuyTicketDTO buyTicketDTO, string userId);
+        Task<ErrorMessageResponseDTO> BuyTicket(BuyTicketDTO buyTicketDTO, string userId);
         Task<IEnumerable<TicketResponseDTO>> GetAllTickets();
         Task<TicketResponseDTO?> GetTicketById(long ticketId);
         Task<IEnumerable<TicketResponseDTO>> GetTicketsByUserId(string userId);

@@ -17,5 +17,7 @@ namespace Tickets.Domain.Models.impl
         public DateTime RequestedAt { get; set; }
         public DateTime? ConfirmedAt { get; set; }
         public string? ErrorMessage { get; set; }
+        public string? PixQrCode { get; set; }
+        public string? PixCopyPaste { get; set; }
     }
 }

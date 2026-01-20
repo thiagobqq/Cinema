@@ -11,6 +11,5 @@ namespace Tickets.Domain.Interfaces.Repositories
         Task<IEnumerable<Payment>> GetPaymentsByTicketId(long ticketId);
         Task AddPayment(Payment payment);
         Task UpdatePayment(Payment payment);
-        Task DeletePayment(long paymentId);
     }
 }
