@@ -29,9 +29,9 @@ namespace Movie.Application.Services
             });
         }
 
-        public async Task<SessionSeatDTO?> GetSessionSeatById(SessionSeatRequestDTO request)
+        public async Task<SessionSeatDTO?> GetSessionSeatById(long id)
         {
-            var s = await _repo.GetSessionSeatById(request.Id);
+            var s = await _repo.GetSessionSeatById(id);
             if (s == null)
                 throw new KeyNotFoundException("Session seat not found.");
 

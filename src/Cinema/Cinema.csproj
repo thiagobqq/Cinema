@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     
@@ -20,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Modules\Auth\Auth.csproj" />
     <ProjectReference Include="..\Modules\Movie\Movie.csproj" />
+    <ProjectReference Include="..\Modules\Shared\Shared.csproj" />
     <ProjectReference Include="..\Modules\Tickets\Tickets.csproj" />
   </ItemGroup>
 

@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cinema.Events.impl;
 using Movie.Application.DTO;
 using Movie.Domain.Interfaces.Services;
 using Tickets.Application.DTO;
 using Tickets.Domain.Interfaces.Repositories;
 using Tickets.Domain.Interfaces.Services;
 using Tickets.Domain.Models.impl;
+
 
 namespace Tickets.Application.Services
 {
@@ -28,7 +30,9 @@ namespace Tickets.Application.Services
             if (!available)
                 return new ErrorMessageResponseDTO { Success = false, Message = "Seat not available" };
 
-            //todo: implements eventsystem to handle lock seat and implement payment process
+            var preBuyEvent = new PreBuyEvent{ SessionSeatId = buyTicketDTO.SessionSeatId, UserId = userId };
+            await preBuyEvent.Call();
+
             
             
 

@@ -7,7 +7,7 @@ namespace Movie.Domain.Interfaces.Services
     public interface ISessionSeatService
     {
         Task<IEnumerable<SessionSeatDTO>> GetAllSessionSeats();
-        Task<SessionSeatDTO?> GetSessionSeatById(SessionSeatRequestDTO request);
+        Task<SessionSeatDTO?> GetSessionSeatById(long id);
         Task<IEnumerable<SessionSeatDTO>> GetSessionSeatsBySessionId(long sessionId);
         Task AddSessionSeat(SessionSeatDTO sessionSeat);
         Task UpdateSessionSeat(SessionSeatUpdateDTO sessionSeat);

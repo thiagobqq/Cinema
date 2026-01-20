@@ -1,7 +1,9 @@
 using Auth.Infra.Seeder;
 using Auth.WebApi;
+using MediatR;
 using Microsoft.OpenApi.Models;
 using Movie.WebApi;
+using Shared.Events;
 using Tickets.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,7 +48,16 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
+    typeof(Program).Assembly,
+    typeof(MovieModule).Assembly,   
+    typeof(AuthModule).Assembly,   
+    typeof(TicketsModule).Assembly  
+));
+
 var app = builder.Build();
+
+EventDispatcher.Configure(app.Services.GetRequiredService<IMediator>());
 
 await RoleSeeder.SeedAsync(app.Services);
 await UserSeeder.SeedAsync(app.Services);

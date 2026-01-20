@@ -31,7 +31,7 @@ namespace Movie.WebApi.Controllers
         {
             try
             {
-                var seat = await _sessionSeatService.GetSessionSeatById(new SessionSeatRequestDTO { Id = id });
+                var seat = await _sessionSeatService.GetSessionSeatById(id);
                 return Ok(seat);
             }
             catch (KeyNotFoundException ex)
