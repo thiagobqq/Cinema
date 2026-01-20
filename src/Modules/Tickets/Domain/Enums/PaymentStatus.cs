@@ -1,6 +1,6 @@
 namespace Tickets.Domain.Enums
 {
-    internal enum PaymentStatus
+    public enum PaymentStatus
     {
         Pending,
         Processing,

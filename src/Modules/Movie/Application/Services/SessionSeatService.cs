@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Movie.Application.DTO;
+using Movie.Domain.Enums;
 using Movie.Domain.Interfaces.Repositories;
 using Movie.Domain.Interfaces.Services;
 using Movie.Domain.Models.impl;
@@ -85,5 +87,15 @@ namespace Movie.Application.Services
         }
 
         public Task DeleteSessionSeat(long sessionSeatId) => _repo.DeleteSessionSeat(sessionSeatId);
+
+        public async Task<bool> IsSeatAvailable(long sessionSeatId)
+        {
+            var seat = await _repo.GetSessionSeatById(sessionSeatId);
+            if (seat == null)
+                return false;
+
+            return seat.Status == SeatStatus.Available
+                   && (!seat.ReservedUntil.HasValue || seat.ReservedUntil <= DateTime.UtcNow);
+        }
     }
 }

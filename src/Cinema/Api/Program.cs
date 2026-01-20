@@ -50,7 +50,6 @@ var app = builder.Build();
 
 await RoleSeeder.SeedAsync(app.Services);
 await UserSeeder.SeedAsync(app.Services);
-await MovieModule.SeedMovieDataAsync(app.Services);
 
 
 if (app.Environment.IsDevelopment() || true)

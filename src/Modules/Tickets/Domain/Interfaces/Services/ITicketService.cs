@@ -4,8 +4,9 @@ using Tickets.Application.DTO;
 
 namespace Tickets.Domain.Interfaces.Services
 {
-    internal interface ITicketService
+    public interface ITicketService
     {
+        Task<ErrorMessageResponseDTO> buyTicket(BuyTicketDTO buyTicketDTO, string userId);
         Task<IEnumerable<TicketResponseDTO>> GetAllTickets();
         Task<TicketResponseDTO?> GetTicketById(long ticketId);
         Task<IEnumerable<TicketResponseDTO>> GetTicketsByUserId(string userId);

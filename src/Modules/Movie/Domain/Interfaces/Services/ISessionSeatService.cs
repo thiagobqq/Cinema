@@ -12,5 +12,6 @@ namespace Movie.Domain.Interfaces.Services
         Task AddSessionSeat(SessionSeatDTO sessionSeat);
         Task UpdateSessionSeat(SessionSeatUpdateDTO sessionSeat);
         Task DeleteSessionSeat(long sessionSeatId);
+        Task<bool> IsSeatAvailable(long sessionSeatId);
     }
 }

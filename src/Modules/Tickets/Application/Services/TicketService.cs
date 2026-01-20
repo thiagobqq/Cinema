@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Movie.Application.DTO;
+using Movie.Domain.Interfaces.Services;
 using Tickets.Application.DTO;
 using Tickets.Domain.Interfaces.Repositories;
 using Tickets.Domain.Interfaces.Services;
@@ -11,8 +14,26 @@ namespace Tickets.Application.Services
     internal class TicketService : ITicketService
     {
         private readonly ITicketRepository _repo;
+        private readonly ISessionSeatService _sessionSeatService;
 
-        public TicketService(ITicketRepository repo) => _repo = repo;
+        public TicketService(ITicketRepository repo, ISessionSeatService sessionSeatService)
+        {
+            _repo = repo;
+            _sessionSeatService = sessionSeatService;
+        }
+
+        public async Task<ErrorMessageResponseDTO> buyTicket(BuyTicketDTO buyTicketDTO, string userId)
+        {
+            var available = await _sessionSeatService.IsSeatAvailable(buyTicketDTO.SessionSeatId);
+            if (!available)
+                return new ErrorMessageResponseDTO { Success = false, Message = "Seat not available" };
+
+            //todo: implements eventsystem to handle lock seat and implement payment process
+            
+            
+
+            return new ErrorMessageResponseDTO { Success = true, Message = "Seat available" };
+        }
 
         public async Task<IEnumerable<TicketResponseDTO>> GetAllTickets()
         {

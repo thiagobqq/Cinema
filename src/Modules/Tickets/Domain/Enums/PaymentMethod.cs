@@ -1,6 +1,6 @@
 namespace Tickets.Domain.Enums
 {
-    internal enum PaymentMethod
+    public enum PaymentMethod
     {
         CreditCard,
         DebitCard,
