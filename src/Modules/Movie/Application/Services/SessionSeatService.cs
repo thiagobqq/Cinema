@@ -16,11 +16,12 @@ namespace Movie.Application.Services
 
         public SessionSeatService(ISessionSeatRepository repo) => _repo = repo;
 
-        public async Task<IEnumerable<SessionSeatDTO>> GetAllSessionSeats()
+        public async Task<IEnumerable<SessionSeatRequestDTO>> GetAllSessionSeats()
         {
             var seats = await _repo.GetAllSessionSeats();
-            return seats.Select(s => new SessionSeatDTO
+            return seats.Select(s => new SessionSeatRequestDTO
             {
+                Id = s.Id,
                 SessionId = s.SessionId,
                 RoomSeatId = s.RoomSeatId,
                 Status = s.Status.ToString(),
