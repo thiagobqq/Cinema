@@ -9,7 +9,6 @@ namespace Movie.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     public class SessionController : ControllerBase
     {
         private readonly ISessionService _sessionService;
@@ -20,6 +19,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpGet]
+
         public async Task<IActionResult> GetAll()
         {
             var sessions = await _sessionService.GetAllSessions();
@@ -41,6 +41,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] SessionDTO request)
         {
             await _sessionService.AddSession(request);
@@ -48,6 +49,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(long id, [FromBody] SessionUpdateDTO request)
         {
             request.Id = id;
@@ -63,6 +65,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(long id)
         {
             try

@@ -26,7 +26,6 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpGet("{id:long}")]
-        [Authorize]
         public async Task<IActionResult> GetById(long id)
         {
             try
@@ -41,7 +40,6 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpGet("session/{sessionId:long}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetBySessionId(long sessionId)
         {
             var seats = await _sessionSeatService.GetSessionSeatsBySessionId(sessionId);

@@ -9,7 +9,6 @@ namespace Movie.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     public class RoomSeatController : ControllerBase
     {
         private readonly IRoomSeatService _roomSeatService;
@@ -41,6 +40,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] RoomSeatDTO request)
         {
             await _roomSeatService.AddRoomSeat(request);
@@ -48,6 +48,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(long id, [FromBody] RoomSeatUpdateDTO request)
         {
             request.Id = id;
@@ -63,6 +64,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(long id)
         {
             try

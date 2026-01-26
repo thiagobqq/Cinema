@@ -9,7 +9,6 @@ namespace Movie.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     public class FilmController : ControllerBase
     {
         private readonly IFilmService _filmService;
@@ -41,6 +40,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] FilmDTO request)
         {
             await _filmService.AddFilm(request);
@@ -48,6 +48,8 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpPut("{id:long}")]
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(long id, [FromBody] FilmUpdateDTO request)
         {
             request.Id = id;
@@ -63,6 +65,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpPatch("{id:long}/rating")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRating(long id, [FromBody] FilmRatingUpdateDTO request)
         {
             request.FilmId = id;
@@ -78,6 +81,7 @@ namespace Movie.WebApi.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(long id)
         {
             try
