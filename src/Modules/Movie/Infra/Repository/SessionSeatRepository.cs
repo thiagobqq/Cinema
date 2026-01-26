@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Movie.Application.DTO;
+using Movie.Domain.Enums;
 using Movie.Domain.Interfaces.Repositories;
 using Movie.Domain.Models.impl;
 using Movie.Infra.Data;
@@ -50,9 +52,16 @@ namespace Movie.Infra.Repository
 
         public async Task UpdateSessionSeat(SessionSeat sessionSeat)
         {
-            _context.SessionSeats.Update(sessionSeat);
-            await _context.SaveChangesAsync();
+            await _context.SessionSeats
+                .Where(ss => ss.Id == sessionSeat.Id)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(ss => ss.Status, sessionSeat.Status)
+                    .SetProperty(ss => ss.ReservedUntil, sessionSeat.ReservedUntil)
+                    .SetProperty(ss => ss.TicketCode, sessionSeat.TicketCode)
+                    .SetProperty(ss => ss.UpdatedAt, DateTime.UtcNow)
+                );
         }
+        
 
         public async Task DeleteSessionSeat(long sessionSeatId)
         {
@@ -62,6 +71,18 @@ namespace Movie.Infra.Repository
                 _context.SessionSeats.Remove(ss);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        private SeatStatus mapStatusFromGateway(string status)
+        {
+            return status switch
+            {
+                "Confirmed" => SeatStatus.Sold,
+                "Failed" => SeatStatus.Available,
+                "Refunded" => SeatStatus.Available,
+                "Processing" => SeatStatus.Locked,
+                _ => SeatStatus.Available
+            };
         }
     }
 }

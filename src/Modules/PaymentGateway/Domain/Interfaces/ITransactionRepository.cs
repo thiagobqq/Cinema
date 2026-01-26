@@ -6,7 +6,7 @@ namespace PaymentGateway.Domain.Interfaces
     {
         Task<Transaction?> GetByIdAsync(string id);
         Task<IEnumerable<Transaction>> GetAllAsync();
-        Task<IEnumerable<Transaction>> GetByExternalReferenceAsync(string externalReference);
+        Task<IEnumerable<Transaction>> GetByExternalReferenceAsync(long externalReference);
         Task AddAsync(Transaction transaction);
         Task UpdateAsync(Transaction transaction);
     }

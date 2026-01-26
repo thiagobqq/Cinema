@@ -6,6 +6,7 @@ using Cinema.Events.impl;
 using Movie.Application.DTO;
 using Movie.Domain.Interfaces.Services;
 using Tickets.Application.DTO;
+using Tickets.Domain.Enums;
 using Tickets.Domain.Interfaces.Repositories;
 using Tickets.Domain.Interfaces.Services;
 using Tickets.Domain.Models.impl;
@@ -17,11 +18,13 @@ namespace Tickets.Application.Services
     {
         private readonly ITicketRepository _repo;
         private readonly ISessionSeatService _sessionSeatService;
+        private readonly IPaymentService _paymentService;
 
-        public TicketService(ITicketRepository repo, ISessionSeatService sessionSeatService)
+        public TicketService(ITicketRepository repo, ISessionSeatService sessionSeatService, IPaymentService paymentService)
         {
             _repo = repo;
             _sessionSeatService = sessionSeatService;
+            _paymentService = paymentService;
         }
 
         public async Task<ErrorMessageResponseDTO> BuyTicket(BuyTicketDTO buyTicketDTO, string userId)
@@ -31,8 +34,23 @@ namespace Tickets.Application.Services
                 return new ErrorMessageResponseDTO { Success = false, Message = "Seat not available" };
 
             var preBuyEvent = new PreBuyEvent{ SessionSeatId = buyTicketDTO.SessionSeatId, UserId = userId };
-            await preBuyEvent.Call();
-                        
+            await preBuyEvent.Call();  
+
+            var ticket = CreateTicket(new TicketDTO
+            {
+                UserId = userId,
+                SessionSeatId = buyTicketDTO.SessionSeatId,
+                PaymentMethod = buyTicketDTO.PaymentMethod,
+                Amount = buyTicketDTO.Amount
+            }).Result;
+
+
+            await _paymentService.ProcessPaymentAsync(new ProcessPaymentDTO
+            {
+                TicketId = ticket.Id,
+                Amount = ticket.Amount,
+                PaymentMethod = ticket.PaymentMethod
+            });                     
             
 
             return new ErrorMessageResponseDTO { Success = true, Message = "Seat available" };
@@ -98,7 +116,7 @@ namespace Tickets.Application.Services
                 Code = GenerateTicketCode(),
                 PurchaseDate = DateTime.UtcNow,
                 PaymentMethod = ticketDTO.PaymentMethod,
-                PaymentStatus = Tickets.Domain.Enums.PaymentStatus.Pending,
+                PaymentStatus = PaymentStatus.Pending,
                 Amount = ticketDTO.Amount
             };
 

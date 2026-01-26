@@ -5,7 +5,7 @@ namespace PaymentGateway.Application.DTO
     public class TransactionStatusDTO
     {
         public string TransactionId { get; set; } = string.Empty;
-        public string ExternalReference { get; set; } = string.Empty;
+        public long ExternalReference { get; set; }
         public TransactionStatus Status { get; set; }
         public decimal Amount { get; set; }
         public DateTime CreatedAt { get; set; }

@@ -5,7 +5,7 @@ namespace PaymentGateway.Domain.Models
     public class Transaction
     {
         public string Id { get; set; } = Guid.NewGuid().ToString("N");
-        public string ExternalReference { get; set; } = string.Empty;
+        public long ExternalReference { get; set; } 
         public decimal Amount { get; set; }
         public GatewayPaymentMethod PaymentMethod { get; set; }
         public TransactionStatus Status { get; set; }

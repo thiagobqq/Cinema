@@ -26,7 +26,7 @@ namespace PaymentGateway.Infra.Repository
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Transaction>> GetByExternalReferenceAsync(string externalReference)
+        public async Task<IEnumerable<Transaction>> GetByExternalReferenceAsync(long externalReference)
         {
             return await _context.Transactions
                 .Where(t => t.ExternalReference == externalReference)

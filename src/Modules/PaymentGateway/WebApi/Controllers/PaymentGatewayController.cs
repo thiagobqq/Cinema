@@ -17,7 +17,6 @@ namespace PaymentGateway.WebApi.Controllers
         }
 
         [HttpPost("process")]
-        [Authorize]
         public async Task<ActionResult<ProcessPaymentResponseDTO>> ProcessPayment([FromBody] ProcessPaymentRequestDTO request)
         {
             if (!ModelState.IsValid)
@@ -28,7 +27,6 @@ namespace PaymentGateway.WebApi.Controllers
         }
 
         [HttpGet("transactions/{transactionId}")]
-        [Authorize]
         public async Task<ActionResult<TransactionStatusDTO>> GetTransactionStatus(string transactionId)
         {
             var result = await _gatewayService.GetTransactionStatusAsync(transactionId);
@@ -48,7 +46,6 @@ namespace PaymentGateway.WebApi.Controllers
         }
 
         [HttpPost("refund")]
-        [Authorize]
         public async Task<ActionResult<RefundResponseDTO>> Refund([FromBody] RefundRequestDTO request)
         {
             if (!ModelState.IsValid)

@@ -2,10 +2,9 @@ using Tickets.Domain.Enums;
 
 namespace Tickets.Application.DTO
 {
-    // DTOs para comunicação com o PaymentGateway via HTTP
-    public class GatewayProcessPaymentRequest
+    public class GatewayProcessPaymentRequestDTO
     {
-        public string ExternalReference { get; set; } = string.Empty;
+        public long ExternalReference { get; set; }
         public decimal Amount { get; set; }
         public int PaymentMethod { get; set; }
         public GatewayCardInfo? CardInfo { get; set; }
@@ -28,7 +27,7 @@ namespace Tickets.Application.DTO
     public class GatewayProcessPaymentResponse
     {
         public string TransactionId { get; set; } = string.Empty;
-        public string ExternalReference { get; set; } = string.Empty;
+        public long ExternalReference { get; set; }
         public int Status { get; set; }
         public decimal Amount { get; set; }
         public string? Message { get; set; }
@@ -48,14 +47,14 @@ namespace Tickets.Application.DTO
         public string? ErrorMessage { get; set; }
     }
 
-    public class GatewayRefundRequest
+    public class GatewayRefundRequestDTO
     {
         public string TransactionId { get; set; } = string.Empty;
         public decimal? Amount { get; set; }
         public string? Reason { get; set; }
     }
 
-    public class GatewayRefundResponse
+    public class GatewayRefundResponseDTO
     {
         public string RefundId { get; set; } = string.Empty;
         public string TransactionId { get; set; } = string.Empty;
@@ -63,5 +62,34 @@ namespace Tickets.Application.DTO
         public bool Success { get; set; }
         public string? Message { get; set; }
         public DateTime ProcessedAt { get; set; }
+    }
+
+    public class GatewayWebhookDTO
+    {
+        public string TransactionId { get; set; } = string.Empty;
+        public long ExternalReference { get; set; }
+        public GatewayCustomerDTO? Customer { get; set; }
+        public int Status { get; set; }
+        public decimal Amount { get; set; }
+        public string? Message { get; set; }
+        public DateTime ProcessedAt { get; set; }
+        public string? PixQrCode { get; set; }
+        public string? PixCopyPaste { get; set; }
+    }
+
+    public class GatewayCustomerDTO
+    {
+        public string CustomerId { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
+
+    public enum GatewayStatus
+    {
+        Processing = 0,
+        Approved = 1,
+        Declined = 2,
+        Error = 3,
+        Refunded = 4
     }
 }

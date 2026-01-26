@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Movie.Application.DTO;
 using Movie.Domain.Models.impl;
 
 namespace Movie.Domain.Interfaces.Repositories

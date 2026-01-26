@@ -9,15 +9,17 @@ namespace PaymentGateway.Application.Services
     {
         private readonly ITransactionRepository _repository;
         private readonly Random _random = new();
+        
+        private readonly string WEBHOOK = "http://localhost:5000/api/gatewayhook"; 
+        private readonly string API_KEY = "123456";
 
         public FakePaymentGatewayService(ITransactionRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<ProcessPaymentResponseDTO> ProcessPaymentAsync(ProcessPaymentRequestDTO request)
+        public async Task<bool> ProcessPaymentAsync(ProcessPaymentRequestDTO request)
         {
-            // Simula latência de rede (100-500ms)
             await Task.Delay(_random.Next(100, 500));
 
             var transaction = new Transaction
@@ -29,14 +31,12 @@ namespace PaymentGateway.Application.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            // Simula validação e processamento
             var (status, message) = SimulatePaymentProcessing(request);
             
             transaction.Status = status;
             transaction.ProcessedAt = DateTime.UtcNow;
             transaction.ErrorMessage = status != TransactionStatus.Approved ? message : null;
 
-            // Gera dados de PIX se for pagamento PIX
             if (request.PaymentMethod == GatewayPaymentMethod.Pix && status == TransactionStatus.Approved)
             {
                 transaction.PixQrCode = GenerateFakePixQrCode(transaction.Id, request.Amount);
@@ -45,7 +45,7 @@ namespace PaymentGateway.Application.Services
 
             await _repository.AddAsync(transaction);
 
-            return new ProcessPaymentResponseDTO
+            var response = new ProcessPaymentResponseDTO
             {
                 TransactionId = transaction.Id,
                 ExternalReference = transaction.ExternalReference,
@@ -56,6 +56,10 @@ namespace PaymentGateway.Application.Services
                 PixQrCode = transaction.PixQrCode,
                 PixCopyPaste = transaction.PixCopyPaste
             };
+
+            SendWebhookMessage(response);
+
+            return true;
         }
 
         public async Task<TransactionStatusDTO?> GetTransactionStatusAsync(string transactionId)
@@ -261,6 +265,34 @@ namespace PaymentGateway.Application.Services
         {
             // Simula código PIX copia e cola
             return $"00020126580014br.gov.bcb.pix0136{transactionId}5204000053039865406{amount:F2}5802BR";
+        }
+
+        private async void SendWebhookMessage(ProcessPaymentResponseDTO dto)
+        {
+            try
+            {
+                using var httpClient = new HttpClient();
+                var json = System.Text.Json.JsonSerializer.Serialize(dto, new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+                });
+
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                var response = await httpClient.PostAsync(WEBHOOK + "?apiKey=" + API_KEY, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"[Webhook] Notificação enviada com sucesso para {WEBHOOK}");
+                }
+                else
+                {
+                    Console.WriteLine($"[Webhook] Falha ao enviar notificação: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Webhook] Erro ao enviar notificação: {ex.Message}");
+            }
         }
     }
 }

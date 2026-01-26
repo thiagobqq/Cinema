@@ -4,7 +4,7 @@ namespace PaymentGateway.Application.DTO
 {
     public class ProcessPaymentRequestDTO
     {
-        public string ExternalReference { get; set; } = string.Empty;
+        public long ExternalReference { get; set; }        
         public decimal Amount { get; set; }
         public GatewayPaymentMethod PaymentMethod { get; set; }
         public CardInfoDTO? CardInfo { get; set; }

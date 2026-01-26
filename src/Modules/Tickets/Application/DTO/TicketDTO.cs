@@ -25,5 +25,7 @@ namespace Tickets.Application.DTO
     {
         public long SessionSeatId { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
+
+        public int Amount { get; set; }
     }
 }

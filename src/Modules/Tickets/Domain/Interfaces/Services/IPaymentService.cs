@@ -13,5 +13,6 @@ namespace Tickets.Domain.Interfaces.Services
         Task UpdatePaymentStatus(long paymentId, PaymentStatusUpdateDTO statusUpdate);
         Task<ProcessPaymentResponseDTO> ProcessPaymentAsync(ProcessPaymentDTO paymentDTO);
         Task<ProcessPaymentResponseDTO> RefundPaymentAsync(long paymentId, string? reason = null);
+        Task ProcessWebhookAsync(GatewayWebhookDTO webhook);
     }
 }

@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Shared.Events.impl;
 using Tickets.Application.DTO;
 using Tickets.Domain.Enums;
 using Tickets.Domain.Interfaces.Repositories;
@@ -12,12 +16,13 @@ namespace Tickets.Application.Services
     internal class PaymentService : IPaymentService
     {
         private readonly IPaymentRepository _repo;
-        private readonly IPaymentGatewayClient _gatewayClient;
+        private readonly ITicketRepository _ticketRepository;
+        private const string GATEWAY_URL = "http://localhost:5000/api/gateway/process";
 
-        public PaymentService(IPaymentRepository repo, IPaymentGatewayClient gatewayClient)
+        public PaymentService(IPaymentRepository repo, ITicketRepository ticketRepository)
         {
             _repo = repo;
-            _gatewayClient = gatewayClient;
+            _ticketRepository = ticketRepository;
         }
 
         public async Task<IEnumerable<PaymentResponseDTO>> GetAllPayments()
@@ -112,7 +117,6 @@ namespace Tickets.Application.Services
 
         public async Task<ProcessPaymentResponseDTO> ProcessPaymentAsync(ProcessPaymentDTO paymentDTO)
         {
-            // Cria o pagamento localmente com status Pending
             var payment = new Payment
             {
                 TicketId = paymentDTO.TicketId,
@@ -126,10 +130,9 @@ namespace Tickets.Application.Services
 
             try
             {
-                // Chama o gateway via HTTP
-                var gatewayRequest = new GatewayProcessPaymentRequest
+                var gatewayRequest = new GatewayProcessPaymentRequestDTO
                 {
-                    ExternalReference = payment.Id.ToString(),
+                    ExternalReference = payment.Id,
                     Amount = paymentDTO.Amount,
                     PaymentMethod = (int)paymentDTO.PaymentMethod,
                     CardInfo = paymentDTO.CardInfo != null ? new GatewayCardInfo
@@ -145,33 +148,17 @@ namespace Tickets.Application.Services
                     } : null
                 };
 
-                var gatewayResponse = await _gatewayClient.ProcessPaymentAsync(gatewayRequest);
-
-                // Mapeia o status do gateway para o status local
-                payment.Status = MapGatewayStatus(gatewayResponse.Status);
-                payment.GatewayTransactionId = gatewayResponse.TransactionId;
-                payment.ErrorMessage = gatewayResponse.Message;
-                payment.PixQrCode = gatewayResponse.PixQrCode;
-                payment.PixCopyPaste = gatewayResponse.PixCopyPaste;
-
-                if (payment.Status == PaymentStatus.Confirmed)
-                    payment.ConfirmedAt = DateTime.UtcNow;
-
-                await _repo.UpdatePayment(payment);
+                await SendToGatewayAsync(gatewayRequest);
 
                 return new ProcessPaymentResponseDTO
                 {
                     PaymentId = payment.Id,
-                    GatewayTransactionId = gatewayResponse.TransactionId,
-                    Status = payment.Status,
-                    Message = gatewayResponse.Message,
-                    PixQrCode = gatewayResponse.PixQrCode,
-                    PixCopyPaste = gatewayResponse.PixCopyPaste
+                    Status = PaymentStatus.Processing,
+                    Message = "Payment sent to gateway. Awaiting confirmation via webhook."
                 };
             }
             catch (Exception ex)
             {
-                // Em caso de erro, atualiza o status para Failed
                 payment.Status = PaymentStatus.Failed;
                 payment.ErrorMessage = $"Gateway error: {ex.Message}";
                 await _repo.UpdatePayment(payment);
@@ -182,6 +169,25 @@ namespace Tickets.Application.Services
                     Status = PaymentStatus.Failed,
                     Message = ex.Message
                 };
+            }
+        }
+
+        private async Task SendToGatewayAsync(GatewayProcessPaymentRequestDTO request)
+        {
+            using var httpClient = new HttpClient();
+            
+            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync(GATEWAY_URL, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Gateway returned {response.StatusCode}: {error}");
             }
         }
 
@@ -199,14 +205,14 @@ namespace Tickets.Application.Services
 
             try
             {
-                var refundRequest = new GatewayRefundRequest
+                var refundRequest = new GatewayRefundRequestDTO
                 {
                     TransactionId = payment.GatewayTransactionId,
                     Amount = payment.Amount,
                     Reason = reason
                 };
 
-                var refundResponse = await _gatewayClient.RefundAsync(refundRequest);
+                var refundResponse = await SendRefundToGatewayAsync(refundRequest);
 
                 if (refundResponse.Success)
                 {
@@ -234,20 +240,76 @@ namespace Tickets.Application.Services
             }
         }
 
+        private async Task<GatewayRefundResponseDTO> SendRefundToGatewayAsync(GatewayRefundRequestDTO request)
+        {
+            using var httpClient = new HttpClient();
+            
+            var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync("http://localhost:5000/api/gateway/refund", content);
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                return new GatewayRefundResponseDTO
+                {
+                    Success = false,
+                    Message = $"Gateway returned {response.StatusCode}: {responseContent}"
+                };
+            }
+
+            return JsonSerializer.Deserialize<GatewayRefundResponseDTO>(responseContent, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new GatewayRefundResponseDTO { Success = false, Message = "Invalid response" };
+        }
+
         private PaymentStatus MapGatewayStatus(int gatewayStatus)
         {
-            // Mapeamento baseado no enum TransactionStatus do gateway
-            // 0=Pending, 1=Processing, 2=Approved, 3=Declined, 4=Error, 5=Refunded
             return gatewayStatus switch
             {
-                0 => PaymentStatus.Pending,
-                1 => PaymentStatus.Processing,
-                2 => PaymentStatus.Confirmed,
+                0 => PaymentStatus.Processing,
+                1 => PaymentStatus.Confirmed,
+                2 => PaymentStatus.Failed,
                 3 => PaymentStatus.Failed,
-                4 => PaymentStatus.Failed,
-                5 => PaymentStatus.Refunded,
+                4 => PaymentStatus.Refunded,
                 _ => PaymentStatus.Failed
             };
+        }
+
+        public async Task ProcessWebhookAsync(GatewayWebhookDTO webhook)
+        {
+            var payment = await _repo.GetPaymentById(webhook.ExternalReference);
+            if (payment == null)
+            {
+                throw new KeyNotFoundException($"Payment not found: {webhook.ExternalReference}");
+            }
+
+            payment.GatewayTransactionId = webhook.TransactionId;
+            payment.Status = MapGatewayStatus(webhook.Status);
+            payment.ErrorMessage = webhook.Message;
+            payment.PixQrCode = webhook.PixQrCode;
+            payment.PixCopyPaste = webhook.PixCopyPaste;
+
+            if (payment.Status == PaymentStatus.Confirmed)
+            {
+                payment.ConfirmedAt = DateTime.UtcNow;
+            }
+
+            await _repo.UpdatePayment(payment);     
+
+            var ticket = await _ticketRepository.GetTicketById(payment.TicketId);
+            ticket!.PaymentStatus = MapGatewayStatus(webhook.Status);
+            await _ticketRepository.UpdateTicket(ticket);    
+
+            var gatewayEvent = new GatewayResponseEvent{ SessionSeatId = payment.Ticket.SessionSeatId, UserId = payment.Ticket.UserId, Status = MapGatewayStatus(webhook.Status).ToString(), TicketCode = ticket!.Code };
+            await gatewayEvent.Call();
+
         }
     }
 }
