@@ -41,20 +41,7 @@ cd Cinema
 
 2. **Configure a connection string** em `src/Cinema/appsettings.json`
 
-3. **Execute as migrações**
-```bash
-dotnet ef database update \
-  --project src/Modules/Auth/Auth.csproj \
-  --startup-project src/Cinema/Cinema.csproj \
-  --context AuthDbContext
-
-dotnet ef database update \
-  --project src/Modules/Movie/Movie.csproj \
-  --startup-project src/Cinema/Cinema.csproj \
-  --context MovieDbContext
-```
-
-4. **Execute a aplicação**
+3. **Execute a aplicação**
 ```bash
 dotnet run --project src/Cinema/Cinema.csproj
 ```
