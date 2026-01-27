@@ -32,11 +32,10 @@ Cada módulo segue a estrutura **Clean Architecture**:
 
 ## Como Executar
 
-### Passos
 
 1. **Clone o repositório**
 ```bash
-git clone https://github.com/seu-usuario/Cinema.git
+git clone https://github.com/thiagobqq/Cinema.git
 cd Cinema
 ```
 
