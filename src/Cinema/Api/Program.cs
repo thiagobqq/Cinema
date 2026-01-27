@@ -65,6 +65,8 @@ EventDispatcher.Configure(app.Services.GetRequiredService<IMediator>());
 
 await RoleSeeder.SeedAsync(app.Services);
 await UserSeeder.SeedAsync(app.Services);
+await MovieModule.SeedMovieDataAsync(app.Services);
+await TicketsModule.SeedTicketsDataAsync(app.Services);
 await PaymentGatewayModule.SeedPaymentGatewayDataAsync(app.Services);
 
 
