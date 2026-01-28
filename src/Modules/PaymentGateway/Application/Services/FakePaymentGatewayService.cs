@@ -225,7 +225,6 @@ namespace PaymentGateway.Application.Services
             if (string.IsNullOrWhiteSpace(card.Cvv) || card.Cvv.Length < 3 || card.Cvv.Length > 4)
                 return (false, "Invalid CVV");
 
-            // Validação simples de Luhn (checksum de cartão)
             if (!PassesLuhnCheck(cardNumber))
                 return (false, "Invalid card number");
 

@@ -273,11 +273,12 @@ namespace Tickets.Application.Services
         {
             return gatewayStatus switch
             {
-                0 => PaymentStatus.Processing,
-                1 => PaymentStatus.Confirmed,
-                2 => PaymentStatus.Failed,
-                3 => PaymentStatus.Failed,
-                4 => PaymentStatus.Refunded,
+                0 => PaymentStatus.Pending,      
+                1 => PaymentStatus.Processing,  
+                2 => PaymentStatus.Confirmed,    
+                3 => PaymentStatus.Failed,       
+                4 => PaymentStatus.Failed,      
+                5 => PaymentStatus.Refunded,    
                 _ => PaymentStatus.Failed
             };
         }

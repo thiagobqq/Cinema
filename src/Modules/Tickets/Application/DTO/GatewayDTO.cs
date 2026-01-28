@@ -86,10 +86,11 @@ namespace Tickets.Application.DTO
 
     public enum GatewayStatus
     {
-        Processing = 0,
-        Approved = 1,
-        Declined = 2,
-        Error = 3,
-        Refunded = 4
+        Pending = 0,
+        Processing = 1,
+        Approved = 2,
+        Declined = 3,
+        Error = 4,
+        Refunded = 5
     }
 }
