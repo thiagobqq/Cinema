@@ -4,8 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Movie.Application.Services;
+using Movie.Application.Tasks;
 using Movie.Domain.Interfaces.Repositories;
 using Movie.Domain.Interfaces.Services;
+using Movie.Domain.Models.impl;
 using Movie.Infra.Data;
 using Movie.Infra.Repository;
 using Movie.Infra.Seeder;
@@ -38,6 +40,8 @@ namespace Movie.WebApi
             services.AddScoped<ISessionSeatRepository, SessionSeatRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<IVenueRepository, VenueRepository>();
+
+            services.AddHostedService<SessionSeatTask>();
 
             return services;
         }
