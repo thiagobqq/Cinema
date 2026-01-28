@@ -30,6 +30,19 @@ namespace Tickets.WebApi.Controllers
             return result.Success ? Ok(result.Message) : BadRequest(result.Message);
         }
 
+        [HttpGet("my-tickets")]
+        [Authorize]
+        public async Task<IActionResult> GetMyTickets()
+        {
+            var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userid == null)
+                return Unauthorized();
+            var tickets = await _ticketService.GetTicketsByUserId(userid);
+            return Ok(tickets);
+        }
+
 
     }
+
+    
 }
