@@ -5,7 +5,7 @@ Sistema de gerenciamento de cinema e compra de tickets com arquitetura **Monolit
 
 ## Arquitetura
 
-O projeto segue uma arquitetura **Monolito Modular** com separação clara de responsabilidades:
+O projeto segue uma arquitetura **Monolito Modular**:
 
 ```
 src/
